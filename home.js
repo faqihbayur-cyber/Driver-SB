@@ -63,7 +63,16 @@ export function mount(section, { user, db }) {
   const availableListEl = section.querySelector("#drv-available-list");
 
   import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js").then(
-    ({ collection, query, where, orderBy, onSnapshot, doc, runTransaction, updateDoc, serverTimestamp }) => {
+    async ({ collection, query, where, orderBy, onSnapshot, doc, getDoc, runTransaction, updateDoc, serverTimestamp }) => {
+      // Ambil profil driver sendiri (nama & foto) sekali di awal, dipakai tiap klaim order
+      let driverProfile = {};
+      try {
+        const profileSnap = await getDoc(doc(db, "users", user.uid));
+        if (profileSnap.exists()) driverProfile = profileSnap.data();
+      } catch (err) {
+        console.error("Gagal ambil profil driver:", err);
+      }
+
       // ---------- Order tersedia (belum diambil driver manapun) ----------
       const qAvailable = query(
         collection(db, "orders"),
@@ -101,7 +110,8 @@ export function mount(section, { user, db }) {
                   tx.update(ref, {
                     status: "diproses",
                     driverUid: user.uid,
-                    driverName: user.displayName || "Driver",
+                    driverName: driverProfile.nama || user.displayName || "Driver",
+                    driverFoto: driverProfile.foto || "",
                     claimedAt: serverTimestamp(),
                     diprosesAt: serverTimestamp(),
                   });

@@ -15,6 +15,10 @@ function escapeHtml(str) {
 
 let unsubActive = null;
 let activeMaps = [];
+let watchId = null;
+let currentActiveOrderIds = [];
+let lastPosWriteAt = 0;
+const POS_WRITE_INTERVAL_MS = 5000;
 
 export function mount(section, { user, db }) {
   section.innerHTML = `
@@ -44,6 +48,13 @@ export function mount(section, { user, db }) {
           const orders = snapshot.docs
             .map((d) => ({ id: d.id, ...d.data() }))
             .sort((a, b) => (a.claimedAt?.toMillis?.() || 0) - (b.claimedAt?.toMillis?.() || 0));
+
+          currentActiveOrderIds = orders.map((o) => o.id);
+          if (orders.length > 0) {
+            startWatchingPosition(db, doc, updateDoc, serverTimestamp);
+          } else {
+            stopWatchingPosition();
+          }
 
           if (orders.length === 0) {
             activeListEl.innerHTML = `
@@ -143,6 +154,34 @@ function showCancelConfirm(onConfirm) {
   });
 }
 
+function startWatchingPosition(db, doc, updateDoc, serverTimestamp) {
+  if (watchId !== null || !navigator.geolocation) return;
+  watchId = navigator.geolocation.watchPosition(
+    (pos) => {
+      const now = Date.now();
+      if (now - lastPosWriteAt < POS_WRITE_INTERVAL_MS) return;
+      lastPosWriteAt = now;
+      const { latitude, longitude } = pos.coords;
+      currentActiveOrderIds.forEach((id) => {
+        updateDoc(doc(db, "orders", id), {
+          driverLat: latitude,
+          driverLng: longitude,
+          driverPosAt: serverTimestamp(),
+        }).catch((err) => console.error("Gagal update posisi:", err));
+      });
+    },
+    (err) => console.error("Gagal ambil lokasi driver:", err),
+    { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+  );
+}
+
+function stopWatchingPosition() {
+  if (watchId !== null && navigator.geolocation) {
+    navigator.geolocation.clearWatch(watchId);
+    watchId = null;
+  }
+}
+
 function buildSteps(o) {
   const status = o.status;
   return [
@@ -227,6 +266,7 @@ function renderActiveCard(o) {
 
 export function unmount(section) {
   if (unsubActive) { unsubActive(); unsubActive = null; }
+  stopWatchingPosition();
   activeMaps.forEach((m) => { try { m.remove(); } catch (e) {} });
   activeMaps = [];
   section.innerHTML = "";

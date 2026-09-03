@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+<!-- PWA Meta -->
+<meta name="theme-color" content="#E85C0D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SuruhBeli">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon_512.png">
+<link rel="icon" type="image/png" href="icon_512.png">
+<title>SuruhBeli Driver</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<link rel="stylesheet" href="index.css" />
+<link rel="stylesheet" href="home.css" />
+<link rel="stylesheet" href="riwayat.css" />
+<link rel="stylesheet" href="pendapatan.css" />
+<link rel="stylesheet" href="profil.css" />
+</head>
+<body>
+
+  <div id="app-loading" class="app-loading">
+    <div class="skeleton-wrap">
+      <div class="skeleton-topbar">
+        <div class="skeleton skeleton-avatar"></div>
+        <div class="skeleton skeleton-bell"></div>
+      </div>
+      <div class="skeleton skeleton-line" style="width:55%;height:20px;margin-bottom:8px;"></div>
+      <div class="skeleton skeleton-line" style="width:38%;margin-bottom:20px;"></div>
+      <div class="skeleton skeleton-earning-card"></div>
+      <div class="skeleton skeleton-line" style="width:42%;height:15px;margin:22px 0 14px;"></div>
+      <div class="skeleton skeleton-order-card"></div>
+      <div class="skeleton skeleton-order-card"></div>
+    </div>
+  </div>
+
+  <main id="view-root" class="view-root">
+    <section id="view-home" class="view-section"></section>
+    <section id="view-riwayat" class="view-section"></section>
+    <section id="view-pendapatan" class="view-section"></section>
+    <section id="view-profil" class="view-section"></section>
+  </main>
+
+  <nav id="bottom-nav" class="bottom-nav" hidden>
+    <button class="nav-btn" data-route="home">
+      <i class="fa-solid fa-house"></i>
+      <span>Beranda</span>
+    </button>
+    <button class="nav-btn" data-route="riwayat">
+      <i class="fa-solid fa-clipboard-list"></i>
+      <span>Order</span>
+    </button>
+    <button class="nav-btn" data-route="pendapatan">
+      <i class="fa-solid fa-wallet"></i>
+      <span>Pendapatan</span>
+    </button>
+    <button class="nav-btn" data-route="profil">
+      <i class="fa-solid fa-user"></i>
+      <span>Profil</span>
+    </button>
+  </nav>
+
+  <div id="global-toast" class="global-toast" hidden></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="index.js"></script>
+  <div id="devConsoleMount"></div>
+  <script src="devconsole.js"></script>
+</body>
+</html>

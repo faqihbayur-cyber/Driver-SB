@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+<!-- PWA Meta -->
+<meta name="theme-color" content="#E85C0D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SuruhBeli Driver">
+<title>Login Driver — SuruhBeli</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+<link rel="stylesheet" href="login.css" />
+</head>
+<body>
+
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-brand">
+        <img src="logo.png" alt="SuruhBeli" class="login-logo" />
+        <p class="login-brand-tag">Driver</p>
+      </div>
+
+      <h1 class="login-title">Masuk Akun Driver</h1>
+      <p class="login-subtitle">Masuk untuk mulai ambil orderan hari ini.</p>
+
+      <form id="login-form" class="login-form" autocomplete="on">
+        <label class="login-field">
+          <span>Email</span>
+          <input type="email" id="login-email" placeholder="email@contoh.com" autocomplete="username" required />
+        </label>
+
+        <label class="login-field">
+          <span>Password</span>
+          <div class="login-password-wrap">
+            <input type="password" id="login-password" placeholder="Masukkan password" autocomplete="current-password" required />
+            <button type="button" class="login-eye-btn" id="login-toggle-password" aria-label="Tampilkan password">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </label>
+
+        <p class="login-error" id="login-error" hidden></p>
+
+        <button type="submit" class="login-submit" id="login-submit">
+          <span id="login-submit-text">Masuk</span>
+          <span class="login-spinner" id="login-spinner" hidden></span>
+        </button>
+      </form>
+
+      <p class="login-footnote">Belum punya akun driver? Hubungi admin SuruhBeli.</p>
+    </div>
+  </div>
+
+  <script type="module" src="login.js"></script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+
+.drv-pdp-wrap {
+  padding: 20px 16px 8px;
+}
+
+/* ---------- Header ---------- */
+.drv-pdp-header {
+  margin-bottom: 18px;
+}
+.drv-pdp-header h1 {
+  font-family: "Fredoka", sans-serif;
+  font-weight: 700;
+  font-size: 21px;
+  margin-bottom: 2px;
+}
+.drv-pdp-header p {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+/* ---------- Filter periode ---------- */
+.drv-pdp-filter-chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 12px;
+}
+.drv-pdp-filter-chips::-webkit-scrollbar { display: none; }
+.drv-pdp-filter-chip {
+  flex: none;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink-soft);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 600;
+  font-size: 12.5px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.drv-pdp-filter-chip-active {
+  background: linear-gradient(135deg, var(--orange), var(--orange-deep));
+  border-color: transparent;
+  color: #fff;
+}
+
+.drv-pdp-filter-custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.drv-pdp-filter-custom input[type="date"] {
+  flex: 1;
+  min-width: 120px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  color: var(--ink);
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+.drv-pdp-filter-custom span { font-size: 12px; color: var(--ink-soft); }
+.drv-pdp-filter-apply-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, var(--orange), var(--orange-deep));
+  color: #fff;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 700;
+  font-size: 12.5px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ---------- Summary: hero pendapatan + stat selesai/batal ---------- */
+.drv-pdp-summary {
+  margin-bottom: 16px;
+}
+
+.drv-pdp-hero {
+  background: linear-gradient(135deg, var(--orange), var(--orange-deep));
+  border-radius: 16px;
+  padding: 18px 18px 16px;
+  margin-bottom: 10px;
+  box-shadow: rgba(214, 118, 41, 0.28) 0px 8px 18px;
+}
+.drv-pdp-hero-label {
+  display: block;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 600;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 4px;
+}
+.drv-pdp-hero-value {
+  font-family: "Fredoka", sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: #fff;
+  margin-bottom: 10px;
+}
+.drv-pdp-hero-sub {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.4);
+}
+.drv-pdp-hero-sub span {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.92);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.drv-pdp-hero-sub i { font-size: 11px; }
+
+.drv-pdp-stat-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.drv-pdp-stat-box {
+  background: #fff;
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow: rgba(149, 157, 165, 0.15) 0px 6px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.drv-pdp-stat-box i { font-size: 18px; }
+.drv-pdp-stat-selesai i { color: #2F7A4F; }
+.drv-pdp-stat-batal i { color: #C13B3B; }
+.drv-pdp-stat-value {
+  font-family: "Fredoka", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.drv-pdp-stat-label {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+}
+
+/* ---------- List riwayat order ---------- */
+.drv-pdp-list {
+  display: block;
+}
+.drv-pdp-loading,
+.drv-pdp-error {
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  padding: 24px 0;
+}
+.drv-pdp-error { color: #C13B3B; }
+
+.drv-pdp-empty {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--ink-soft);
+}
+.drv-pdp-empty-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--orange-soft);
+  color: var(--orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin: 0 auto 12px;
+}
+.drv-pdp-empty p {
+  font-size: 13px;
+}
+
+.drv-pdp-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  box-shadow: rgba(149, 157, 165, 0.15) 0px 6px 16px;
+}
+.drv-pdp-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.drv-pdp-order-id {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 700;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+.drv-pdp-badge {
+  font-weight: 700;
+  font-size: 11.5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.drv-pdp-items {
+  font-size: 13px;
+  color: var(--ink);
+  margin-bottom: 0;
+}
+.drv-pdp-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  margin-top: 8px;
+  border-top: 1px dashed var(--line);
+}
+.drv-pdp-time {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.drv-pdp-fee {
+  font-family: "Fredoka", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--orange-deep);
+}

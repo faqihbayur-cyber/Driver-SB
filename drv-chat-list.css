@@ -1,0 +1,180 @@
+/* chat-list.css */
+
+.chatlist-wrap {
+  padding: 24px 16px 100px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.chatlist-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.chatlist-topbar h1 {
+  font-family: "Fredoka", sans-serif;
+  font-weight: 700;
+  font-size: 26px;
+  color: var(--ink);
+  margin: 0;
+}
+
+.chatlist-icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(43, 27, 16, 0.08);
+}
+
+.chatlist-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 16px;
+  margin-bottom: 14px;
+  color: var(--ink-soft);
+}
+.chatlist-search-bar[hidden] { display: none; }
+.chatlist-search-bar input {
+  flex: 1;
+  border: none;
+  background: none;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+.chatlist-search-bar input:focus { outline: none; }
+
+.chatlist-loading,
+.chatlist-error {
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+  padding: 40px 0;
+}
+
+.chatlist-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--ink-soft);
+}
+.chatlist-empty-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--orange-soft);
+  color: var(--orange-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+.chatlist-empty p { font-size: 13.5px; margin: 0; }
+
+.chatlist-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  padding: 14px 0;
+  cursor: pointer;
+  text-align: left;
+}
+.chatlist-item:active { opacity: 0.6; }
+
+.chatlist-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: none;
+  border: 2px solid var(--orange-soft);
+}
+.chatlist-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--orange-soft);
+  color: var(--orange-deep);
+  font-size: 18px;
+}
+
+.chatlist-item-body { flex: 1; min-width: 0; }
+
+.chatlist-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.chatlist-item-name {
+  font-family: "Fredoka", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+}
+.chatlist-item-name-unread { font-weight: 700; }
+
+.chatlist-item-time {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  flex: none;
+}
+
+.chatlist-item-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.chatlist-item-preview {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chatlist-item-preview-unread {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.chatlist-badge {
+  flex: none;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--orange-deep);
+  color: #fff;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

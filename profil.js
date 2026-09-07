@@ -7,9 +7,6 @@ function escapeHtml(str) {
 }
 
 const PLACEHOLDER_MENU = [
-  { key: "data-pribadi", icon: "fa-user", label: "Data Pribadi" },
-  { key: "kendaraan", icon: "fa-car", label: "Kendaraan Saya" },
-  { key: "bank", icon: "fa-credit-card", label: "Bank / Rekening" },
   { key: "pengaturan", icon: "fa-gear", label: "Pengaturan" },
   { key: "bantuan", icon: "fa-circle-question", label: "Bantuan & FAQ" },
   { key: "tentang", icon: "fa-circle-info", label: "Tentang SuruhBeli" },
@@ -33,6 +30,25 @@ export function mount(section, { user, driverData, signOut, auth }) {
         <span class="drv-profil-status">
           <i class="fa-solid fa-circle-check"></i> Terverifikasi
         </span>
+      </div>
+
+      <div class="drv-profil-card">
+        <div class="drv-profil-card-row">
+          <span class="drv-profil-card-label">Nama</span>
+          <span class="drv-profil-card-value">${escapeHtml(driverData?.nama || "-")}</span>
+        </div>
+        <div class="drv-profil-card-row">
+          <span class="drv-profil-card-label">Alamat</span>
+          <span class="drv-profil-card-value">${escapeHtml(driverData?.alamat || "-")}</span>
+        </div>
+        <div class="drv-profil-card-row">
+          <span class="drv-profil-card-label">No Telepon</span>
+          <span class="drv-profil-card-value">${escapeHtml(driverData?.noTelepon || "-")}</span>
+        </div>
+        <div class="drv-profil-card-row">
+          <span class="drv-profil-card-label">Plat Motor</span>
+          <span class="drv-profil-card-value">${escapeHtml(driverData?.platMotor || "-")}</span>
+        </div>
       </div>
 
       <div class="drv-profil-menu">

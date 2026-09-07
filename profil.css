@@ -135,3 +135,29 @@
   background: var(--red);
   color: #fff;
 }
+
+.drv-profil-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 4px 18px;
+  box-shadow: rgba(149, 157, 165, 0.15) 0px 6px 16px;
+  margin: 0 16px 16px;
+}
+.drv-profil-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-top: 1px solid #F0EBE3;
+}
+.drv-profil-card-row:first-child { border-top: none; }
+.drv-profil-card-label {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.drv-profil-card-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: right;
+}

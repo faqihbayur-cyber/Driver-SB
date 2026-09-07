@@ -15,6 +15,18 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+const RADIUS_KM = 2;
+
+function haversineKm(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.asin(Math.sqrt(a));
+}
+
 let unsubAvailable = null;
 
 export function mount(section, { user, db }) {
@@ -28,9 +40,8 @@ export function mount(section, { user, db }) {
             <span class="drv-brand-sub">Driver</span>
           </div>
         </div>
-        <button class="drv-bell-btn">
-          <i class="fa-solid fa-bell"></i>
-          <span class="drv-bell-dot"></span>
+        <button class="drv-avatar-btn" id="drv-avatar-btn">
+          <div class="drv-avatar-fallback" id="drv-avatar-fallback">${escapeHtml((user.displayName || "D").trim().charAt(0).toUpperCase())}</div>
         </button>
       </div>
 
@@ -62,6 +73,10 @@ export function mount(section, { user, db }) {
 
   const availableListEl = section.querySelector("#drv-available-list");
 
+  section.querySelector("#drv-avatar-btn").addEventListener("click", () => {
+    window.location.hash = "#/profil";
+  });
+
   import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js").then(
     async ({ collection, query, where, orderBy, onSnapshot, doc, getDoc, runTransaction, updateDoc, serverTimestamp }) => {
       // Ambil profil driver sendiri (nama & foto) sekali di awal, dipakai tiap klaim order
@@ -73,6 +88,18 @@ export function mount(section, { user, db }) {
         console.error("Gagal ambil profil driver:", err);
       }
 
+      const driverLoc = driverProfile.location
+        ? { lat: driverProfile.location.latitude, lng: driverProfile.location.longitude }
+        : null;
+      if (!driverLoc) {
+        console.warn("Lokasi driver belum diatur — filter radius dilewati, semua order ditampilkan.");
+      }
+
+      const avatarFallbackEl = document.getElementById("drv-avatar-fallback");
+      if (avatarFallbackEl && driverProfile.foto) {
+        avatarFallbackEl.outerHTML = `<img class="drv-avatar-img" src="${escapeHtml(driverProfile.foto)}" alt="" />`;
+      }
+
       // ---------- Order tersedia (belum diambil driver manapun) ----------
       const qAvailable = query(
         collection(db, "orders"),
@@ -82,15 +109,33 @@ export function mount(section, { user, db }) {
       unsubAvailable = onSnapshot(
         qAvailable,
         (snapshot) => {
-          const orders = snapshot.docs
-            .map((d) => ({ id: d.id, ...d.data() }))
-            .sort((a, b) => (a.createdAt?.toMillis?.() || 0) - (b.createdAt?.toMillis?.() || 0));
+          let orders = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+
+          if (driverLoc) {
+            orders = orders.filter((o) => {
+              if (typeof o.lat !== "number" || typeof o.lng !== "number") return true;
+              return haversineKm(driverLoc.lat, driverLoc.lng, o.lat, o.lng) <= RADIUS_KM;
+            });
+          }
+
+          orders = orders.sort((a, b) => (a.createdAt?.toMillis?.() || 0) - (b.createdAt?.toMillis?.() || 0));
 
           const titleEl = document.getElementById("drv-available-title");
           if (titleEl) titleEl.textContent = `Order Tersedia (${orders.length})`;
 
           if (orders.length === 0) {
-            availableListEl.innerHTML = `<p class="drv-empty">Belum ada order baru. Sabar ya, ditunggu aja 🙏</p>`;
+            availableListEl.innerHTML = `
+              <div class="drv-radar-empty">
+                <div class="drv-radar">
+                  <span class="drv-radar-ring"></span>
+                  <span class="drv-radar-ring"></span>
+                  <span class="drv-radar-ring"></span>
+                  <div class="drv-radar-dot"><i class="fa-solid fa-motorcycle"></i></div>
+                </div>
+                <p>Belum ada order baru di sekitarmu.</p>
+                <span class="drv-radar-sub">Memantau orderan ${RADIUS_KM} km</span>
+              </div>
+            `;
             return;
           }
 

@@ -1,5 +1,7 @@
 // riwayat.js — order aktif (sudah diambil, belum selesai), khusus milik driver ini
 
+import { setActiveChat } from "./chat-state.js";
+
 function formatRupiah(n) {
   return "Rp" + Number(n || 0).toLocaleString("id-ID");
 }
@@ -30,9 +32,28 @@ export function mount(section, { user, db }) {
 
       <div id="drv-riwayat-active"><p class="drv-loading">Memuat...</p></div>
     </div>
+
+    <div class="drv-photo-lightbox-overlay" id="drv-photo-lightbox" hidden>
+      <button type="button" class="drv-photo-lightbox-close" id="drv-photo-lightbox-close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <img src="" alt="" class="drv-photo-lightbox-img" id="drv-photo-lightbox-img" />
+      <p class="drv-photo-lightbox-name" id="drv-photo-lightbox-name"></p>
+    </div>
   `;
 
   const activeListEl = section.querySelector("#drv-riwayat-active");
+
+  const photoLightbox = section.querySelector("#drv-photo-lightbox");
+  const photoLightboxImg = section.querySelector("#drv-photo-lightbox-img");
+  const photoLightboxName = section.querySelector("#drv-photo-lightbox-name");
+
+  section.querySelector("#drv-photo-lightbox-close").addEventListener("click", () => {
+    photoLightbox.hidden = true;
+  });
+  photoLightbox.addEventListener("click", (e) => {
+    if (e.target === photoLightbox) photoLightbox.hidden = true;
+  });
 
   import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js").then(
     ({ collection, query, where, onSnapshot, doc, updateDoc, serverTimestamp }) => {
@@ -119,6 +140,26 @@ export function mount(section, { user, db }) {
                   btn.disabled = false;
                 }
               });
+            });
+          });
+
+          activeListEl.querySelectorAll(".drv-chat-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              setActiveChat({
+                customerUid: btn.dataset.customerUid,
+                customerName: btn.dataset.customerName,
+                customerFoto: btn.dataset.customerFoto,
+              });
+              window.location.hash = "#/chat-room";
+            });
+          });
+
+          activeListEl.querySelectorAll(".drv-detail-customer-avatar-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              if (btn.classList.contains("drv-avatar-broken")) return;
+              photoLightboxImg.src = btn.dataset.photo;
+              photoLightboxName.textContent = btn.dataset.name || "";
+              photoLightbox.hidden = false;
             });
           });
         },
@@ -223,6 +264,19 @@ function renderActiveCard(o) {
           <span class="drv-detail-id">#${orderIdDisplay}</span>
           <span class="drv-detail-badge">Diambil</span>
         </div>
+        <div class="drv-detail-customer-row">
+          ${o.customerFoto
+            ? `<button type="button" class="drv-detail-customer-avatar-btn" data-photo="${escapeHtml(o.customerFoto)}" data-name="${escapeHtml(o.customerName || "Customer")}">
+                <img src="${escapeHtml(o.customerFoto)}" alt="" class="drv-detail-customer-avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'; this.closest('.drv-detail-customer-avatar-btn').classList.add('drv-avatar-broken');" />
+                <div class="drv-detail-customer-avatar drv-detail-customer-avatar-fallback" style="display:none;">${escapeHtml((o.customerName || "C").trim().charAt(0).toUpperCase())}</div>
+              </button>`
+            : `<div class="drv-detail-customer-avatar drv-detail-customer-avatar-fallback">${escapeHtml((o.customerName || "C").trim().charAt(0).toUpperCase())}</div>`
+          }
+          <span class="drv-detail-customer-name">${escapeHtml(o.customerName || "Customer")}</span>
+        </div>
+        <button class="drv-chat-btn" data-customer-uid="${o.customerUid || ""}" data-customer-name="${escapeHtml(o.customerName || "Customer")}" data-customer-foto="${escapeHtml(o.customerFoto || "")}">
+          <i class="fa-solid fa-comment-dots"></i> Chat Customer
+        </button>
         <p class="drv-detail-items">Belikan: ${escapeHtml(o.items || "-")}</p>
         <div class="drv-detail-total-row">
           <span>Total dari Customer</span>

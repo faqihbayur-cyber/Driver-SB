@@ -1,5 +1,3 @@
-// pendapatan.js — riwayat order selesai/batal & akumulasi pendapatan, khusus milik driver ini
-// Semua class CSS pakai prefix "drv-pdp-" (lihat pendapatan.css) — TIDAK pakai class dari riwayat.css lagi.
 
 function formatRupiah(n) {
   return "Rp" + Number(n || 0).toLocaleString("id-ID");
@@ -73,7 +71,6 @@ export function mount(section, { user, db }) {
         <input type="date" id="pdp-filter-start" />
         <span>s/d</span>
         <input type="date" id="pdp-filter-end" />
-        <button type="button" id="pdp-filter-apply" class="drv-pdp-filter-apply-btn">Terapkan</button>
       </div>
 
       <div id="pdp-summary" class="drv-pdp-summary"></div>
@@ -181,8 +178,11 @@ export function mount(section, { user, db }) {
     });
   });
 
-  section.querySelector("#pdp-filter-apply").addEventListener("click", () => {
+  startInputEl.addEventListener("change", () => {
     customStartDate = startInputEl.value || null;
+    renderPendapatan();
+  });
+  endInputEl.addEventListener("change", () => {
     customEndDate = endInputEl.value || null;
     renderPendapatan();
   });

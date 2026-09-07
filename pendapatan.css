@@ -64,18 +64,6 @@
   font-family: "Plus Jakarta Sans", sans-serif;
 }
 .drv-pdp-filter-custom span { font-size: 12px; color: var(--ink-soft); }
-.drv-pdp-filter-apply-btn {
-  border: none;
-  border-radius: 10px;
-  padding: 8px 14px;
-  background: linear-gradient(135deg, var(--orange), var(--orange-deep));
-  color: #fff;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-weight: 700;
-  font-size: 12.5px;
-  cursor: pointer;
-  white-space: nowrap;
-}
 
 /* ---------- Summary: hero pendapatan + stat selesai/batal ---------- */
 .drv-pdp-summary {

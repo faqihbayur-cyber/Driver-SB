@@ -278,6 +278,12 @@ function renderActiveCard(o) {
           <i class="fa-solid fa-comment-dots"></i> Chat Customer
         </button>
         <p class="drv-detail-items">Belikan: ${escapeHtml(o.items || "-")}</p>
+        ${o.notes ? `
+          <div class="drv-detail-notes">
+            <i class="fa-solid fa-note-sticky"></i>
+            <span>${escapeHtml(o.notes)}</span>
+          </div>
+        ` : ""}
         <div class="drv-detail-total-row">
           <span>Total dari Customer</span>
           <span class="drv-detail-total-amount">${formatRupiah(totalCustomer)}</span>

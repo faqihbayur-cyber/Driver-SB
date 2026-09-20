@@ -15,7 +15,7 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-const RADIUS_KM = 2;
+const DEFAULT_RADIUS_KM = 2;
 
 function haversineKm(lat1, lng1, lat2, lng2) {
   const R = 6371;
@@ -88,6 +88,17 @@ export function mount(section, { user, db }) {
         console.error("Gagal ambil profil driver:", err);
       }
 
+      // Ambil radius dari config/notifSettings, fallback ke default kalau belum ada/gagal
+      let radiusKm = DEFAULT_RADIUS_KM;
+      try {
+        const configSnap = await getDoc(doc(db, "config", "notifSettings"));
+        if (configSnap.exists() && typeof configSnap.data().radiusKm === "number") {
+          radiusKm = configSnap.data().radiusKm;
+        }
+      } catch (err) {
+        console.error("Gagal ambil config radius, pakai default:", err);
+      }
+
       const driverLoc = driverProfile.location
         ? { lat: driverProfile.location.latitude, lng: driverProfile.location.longitude }
         : null;
@@ -114,7 +125,7 @@ export function mount(section, { user, db }) {
           if (driverLoc) {
             orders = orders.filter((o) => {
               if (typeof o.lat !== "number" || typeof o.lng !== "number") return true;
-              return haversineKm(driverLoc.lat, driverLoc.lng, o.lat, o.lng) <= RADIUS_KM;
+              return haversineKm(driverLoc.lat, driverLoc.lng, o.lat, o.lng) <= radiusKm;
             });
           }
 
@@ -133,7 +144,7 @@ export function mount(section, { user, db }) {
                   <div class="drv-radar-dot"><i class="fa-solid fa-motorcycle"></i></div>
                 </div>
                 <p>Belum ada order baru di sekitarmu.</p>
-                <span class="drv-radar-sub">Memantau orderan ${RADIUS_KM} km</span>
+                <span class="drv-radar-sub">Memantau orderan ${radiusKm} km</span>
               </div>
             `;
             return;

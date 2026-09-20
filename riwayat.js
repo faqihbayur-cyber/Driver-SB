@@ -17,6 +17,8 @@ function escapeHtml(str) {
 
 let unsubActive = null;
 let activeMaps = [];
+let activeMapsById = {};
+let customerLocUnsubs = {};
 let watchId = null;
 let currentActiveOrderIds = [];
 let lastPosWriteAt = 0;
@@ -55,8 +57,15 @@ export function mount(section, { user, db }) {
     if (e.target === photoLightbox) photoLightbox.hidden = true;
   });
 
-  import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js").then(
-    ({ collection, query, where, onSnapshot, doc, updateDoc, serverTimestamp }) => {
+  Promise.all([
+    import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"),
+    import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"),
+  ]).then(
+    ([
+      { collection, query, where, onSnapshot, doc, updateDoc, serverTimestamp },
+      { getDatabase, ref, onValue },
+    ]) => {
+      const rtdb = getDatabase();
       const qActive = query(
         collection(db, "orders"),
         where("driverUid", "==", user.uid),
@@ -91,6 +100,7 @@ export function mount(section, { user, db }) {
 
           activeMaps.forEach((m) => { try { m.remove(); } catch (e) {} });
           activeMaps = [];
+          activeMapsById = {};
           orders.forEach((o) => {
             if (typeof o.lat !== "number" || typeof o.lng !== "number") return;
             const mapEl = document.getElementById(`drv-map-${o.id}`);
@@ -101,8 +111,26 @@ export function mount(section, { user, db }) {
             }
             const map = window.L.map(mapEl, { zoomControl: false, attributionControl: false }).setView([o.lat, o.lng], 15);
             window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
-            window.L.marker([o.lat, o.lng]).addTo(map);
+            const customerMarker = window.L.marker([o.lat, o.lng]).addTo(map);
             activeMaps.push(map);
+            activeMapsById[o.id] = { map, customerMarker };
+          });
+
+          // live-tracking lokasi customer: cuma di-listen selama status "diantar",
+          // marker di-geser langsung (setLatLng) tanpa bikin ulang peta
+          Object.values(customerLocUnsubs).forEach((unsub) => unsub());
+          customerLocUnsubs = {};
+          orders.forEach((o) => {
+            if (o.status !== "diantar") return;
+            const entry = activeMapsById[o.id];
+            if (!entry) return;
+            const locRef = ref(rtdb, `liveTracking/${o.id}/customerLoc`);
+            customerLocUnsubs[o.id] = onValue(locRef, (snap) => {
+              const loc = snap.val();
+              if (!loc || typeof loc.lat !== "number" || typeof loc.lng !== "number") return;
+              entry.customerMarker.setLatLng([loc.lat, loc.lng]);
+              entry.map.panTo([loc.lat, loc.lng]);
+            });
           });
 
           activeListEl.querySelectorAll(".drv-timeline-btn").forEach((btn) => {
@@ -327,7 +355,10 @@ function renderActiveCard(o) {
 export function unmount(section) {
   if (unsubActive) { unsubActive(); unsubActive = null; }
   stopWatchingPosition();
+  Object.values(customerLocUnsubs).forEach((unsub) => unsub());
+  customerLocUnsubs = {};
   activeMaps.forEach((m) => { try { m.remove(); } catch (e) {} });
   activeMaps = [];
+  activeMapsById = {};
   section.innerHTML = "";
 }

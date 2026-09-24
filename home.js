@@ -225,6 +225,7 @@ function renderAvailableCard(o) {
       <div class="drv-card-pills">
         ${o.budgetEstimate ? `<span class="drv-budget-pill">Est. Belanja ${formatRupiah(o.budgetEstimate)}</span>` : ""}
         ${o.eta ? `<span class="drv-eta-pill"><i class="fa-regular fa-clock"></i> ${escapeHtml(o.eta)}</span>` : ""}
+        ${o.metodeBayar === "COD" ? `<span class="drv-budget-pill">COD · Tagih ${formatRupiah(o.totalBayar)}</span>` : ""}
       </div>
       <div class="drv-card-bottom">
         <span class="drv-fee-label">Estimasi Biaya Jasa</span>
